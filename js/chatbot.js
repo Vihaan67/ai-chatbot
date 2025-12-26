@@ -33,9 +33,9 @@ const CHAT_HTML = `
         <!-- Quick Replies -->
          <div class="chat-input-area">
              <div id="quick-replies" class="quick-replies">
-                <button class="quick-reply-btn" data-msg="What are Vihaan's hobbies?">Hobbies?</button>
+                <button class="quick-reply-btn" data-msg="What is Vihaan's dream?">Dream?</button>
+                <button class="quick-reply-btn" data-msg="Where does he go to school?">School?</button>
                 <button class="quick-reply-btn" data-msg="Tell me a fun fact!">Fun Fact!</button>
-                <button class="quick-reply-btn" data-msg="What projects has he built?">Projects?</button>
             </div>
             <div class="input-wrapper">
                 <input type="text" id="chat-input" placeholder="Ask me anything..." autocomplete="off">
