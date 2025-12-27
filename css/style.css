@@ -163,14 +163,14 @@ h1 {
     box-shadow: var(--shadow);
 }
 
-.ambitions-grid {
+.cards-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
 
-.ambition-card {
+.interactive-card {
     height: 250px;
     position: relative;
     overflow: hidden;
@@ -183,20 +183,20 @@ h1 {
     text-align: center;
 }
 
-.ambition-card:hover {
+.interactive-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
     border-color: var(--accent-primary);
 }
 
-.ambition-card .icon {
+.interactive-card .icon {
     font-size: 4rem;
     color: var(--accent-secondary);
     margin-bottom: 1rem;
     transition: transform 0.3s ease;
 }
 
-.ambition-card h3 {
+.interactive-card h3 {
     font-size: 1.5rem;
     color: white;
     z-index: 2;
@@ -224,12 +224,12 @@ h1 {
 }
 
 /* Slide up effect on hover or touch */
-.ambition-card:hover .reveal-text,
-.ambition-card:active .reveal-text {
+.interactive-card:hover .reveal-text,
+.interactive-card:active .reveal-text {
     bottom: 0;
 }
 
-.ambition-card:hover .icon {
+.interactive-card:hover .icon {
     transform: scale(0.8) translateY(-50px);
     opacity: 0.2;
 }
