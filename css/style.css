@@ -316,53 +316,50 @@ footer {
 
 .liquid-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4facfe, #00f2fe);
-    border-radius: 20px 0 0 20px;
+    background: linear-gradient(90deg, #4facfe, #00f2fe, #4facfe);
+    background-size: 200% 100%;
+    border-radius: 20px;
     position: relative;
-    box-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
-    /* Simple slide in animation on load */
-    animation: slideIn 1.5s ease-out forwards;
+    box-shadow: 0 0 15px rgba(79, 172, 254, 0.6);
+    animation: slideIn 1.5s ease-out forwards, liquidShimmer 3s linear infinite;
     transform-origin: left;
 }
 
-/* Water / Wave Effect - "Distinct Waves" */
-.liquid-fill::before {
-    content: '';
-    position: absolute;
-    top: -10px;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    width: 200%;
-    /* Double width for smooth loop */
-    background-repeat: repeat-x;
-    background-image: radial-gradient(circle at 10px -5px,
-            transparent 12px,
-            rgba(255, 255, 255, 0.3) 13px,
-            transparent 14px);
-    background-size: 20px 20px;
-    animation: waveFlow 2s linear infinite;
-    mix-blend-mode: overlay;
-    opacity: 0.8;
-}
-
-/* Second wave layer for depth */
+/* Moving Waves on Top of Blue Fill */
+.liquid-fill::before,
 .liquid-fill::after {
     content: '';
     position: absolute;
-    top: -5px;
+    top: -15px;
+    /* Position wave peaks slightly above the fill */
     left: 0;
-    right: 0;
-    bottom: 0;
-    width: 200%;
+    width: 400%;
+    /* Very wide for complex wave patterns */
+    height: 40px;
     background-repeat: repeat-x;
-    background-image: radial-gradient(circle at 10px -5px,
-            transparent 12px,
-            rgba(255, 255, 255, 0.15) 13px,
-            transparent 14px);
-    background-size: 30px 20px;
-    animation: waveFlow 3s linear infinite reverse;
-    opacity: 0.6;
+}
+
+/* Primary Wave Layer (Blue-ish) */
+.liquid-fill::before {
+    background-image: radial-gradient(circle at 20px -5px,
+            #4facfe 15px,
+            transparent 16px);
+    background-size: 40px 40px;
+    animation: waveFlow 4s linear infinite;
+    z-index: 2;
+    opacity: 1;
+    /* More solid to look like the fill itself is waving */
+}
+
+/* Secondary Wave Layer (Lighter/Foamy) */
+.liquid-fill::after {
+    background-image: radial-gradient(circle at 15px -8px,
+            rgba(255, 255, 255, 0.4) 12px,
+            transparent 13px);
+    background-size: 30px 40px;
+    animation: waveFlow 2s linear infinite reverse;
+    z-index: 3;
+    opacity: 0.5;
 }
 
 @keyframes slideIn {
@@ -372,6 +369,16 @@ footer {
 
     to {
         transform: scaleX(1);
+    }
+}
+
+@keyframes liquidShimmer {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    100% {
+        background-position: 200% 50%;
     }
 }
 
