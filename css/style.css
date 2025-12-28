@@ -261,3 +261,95 @@ footer {
     /* Hide nav for simple MVP on mobile for now */
     /* Add a mobile menu toggle if needed later */
 }
+
+/* Skills Section (Superpowers) */
+.skills-section {
+    max-width: 800px;
+    margin: 4rem auto 0;
+    padding: 2rem;
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 20px;
+    border: var(--glass-border);
+    backdrop-filter: blur(5px);
+}
+
+.skills-section h3 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 2rem;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.skill-container {
+    margin-bottom: 1.5rem;
+}
+
+.skill-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.skill-bar {
+    width: 100%;
+    height: 25px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.liquid-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4facfe, #00f2fe);
+    border-radius: 15px 0 0 15px;
+    position: relative;
+    box-shadow: 0 0 10px rgba(79, 172, 254, 0.5);
+    /* Simple slide in animation on load */
+    animation: slideIn 1.5s ease-out forwards;
+    transform-origin: left;
+}
+
+/* Water / Wave Effect */
+.liquid-fill::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    /* Shimmer flow effect */
+    background: linear-gradient(45deg,
+            rgba(255, 255, 255, 0) 40%,
+            rgba(255, 255, 255, 0.3) 50%,
+            rgba(255, 255, 255, 0) 60%);
+    background-size: 200% 100%;
+    animation: shine 2s infinite linear;
+}
+
+@keyframes slideIn {
+    from {
+        transform: scaleX(0);
+    }
+
+    to {
+        transform: scaleX(1);
+    }
+}
+
+@keyframes shine {
+    0% {
+        background-position: 100% 0;
+    }
+
+    100% {
+        background-position: -100% 0;
+    }
+}
