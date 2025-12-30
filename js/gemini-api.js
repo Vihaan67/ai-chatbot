@@ -4,9 +4,8 @@
  */
 
 class GeminiAPI {
-    constructor(apiKey) {
-        this.apiKey = apiKey;
-        this.baseUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent";
+    constructor() {
+        this.baseUrl = "/api/chat";
         this.systemPrompt = `You are Vihaan’s friendly AI assistant. 
         Context about Vihaan:
         - Name: Vihaan
@@ -19,6 +18,7 @@ class GeminiAPI {
           1. He loves learning about how planes fly.
           2. He has already built his own AI Avatar app!
           3. He is a coding wizard who loves building cool websites.
+          4. He is a world-class gamer, ranked Top 100 in the COD World Championship 2025!
         
         Instructions:
         - Answer questions about Vihaan in a super fun, energetic, and kid-friendly way.
@@ -27,36 +27,16 @@ class GeminiAPI {
     }
 
     async sendMessage(history, userMessage) {
-        const url = `${this.baseUrl}?key=${this.apiKey}`;
-
-        // Construct the payload
-        // We simulate a system prompt by prepending it to the history or strictly using the 'system_instruction' if available (Beta feature).
-        // For stability with standard endpoints, we'll prepend context to the first message or guide the conversation.
-        // Simplified approach for this demo:
-
-        const contents = history.map(msg => ({
-            role: msg.role === 'ai' ? 'model' : 'user',
-            parts: [{ text: msg.text }]
-        }));
-
-        // Add the new user message
-        contents.push({
-            role: "user",
-            parts: [{ text: `(Context: ${this.systemPrompt}) ${userMessage}` }]
-        });
-
         try {
-            const response = await fetch(url, {
+            const response = await fetch(this.baseUrl, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
                 },
                 body: JSON.stringify({
-                    contents: contents,
-                    generationConfig: {
-                        temperature: 0.7,
-                        maxOutputTokens: 200,
-                    }
+                    history: history,
+                    userMessage: userMessage,
+                    systemPrompt: this.systemPrompt
                 })
             });
 
@@ -73,7 +53,13 @@ class GeminiAPI {
             }
 
         } catch (error) {
-            console.error("Gemini API Error:", error);
+            console.error("Gemini API Proxy Error:", error);
+
+            // Check if it's likely a connection error (server offline)
+            if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+                return "🚨 I can't connect to my server! Please make sure you've run 'npm start' in your terminal and you are opening http://localhost:3000.";
+            }
+
             return "Oops! My brain is clouding over. Please check your internet or API key.";
         }
     }

@@ -50,10 +50,9 @@ const CHAT_HTML = `
 class Chatbot {
     constructor() {
         this.container = document.getElementById('chatbot-container');
-        // Use config key if available, otherwise check local storage
-        this.apiKey = (typeof CONFIG !== 'undefined' && CONFIG.GEMINI_API_KEY) ? CONFIG.GEMINI_API_KEY : localStorage.getItem('GEMINI_API_KEY');
         this.history = JSON.parse(localStorage.getItem('chatHistory')) || [];
         this.isOpen = false;
+        this.api = new GeminiAPI();
 
         this.init();
     }
@@ -72,13 +71,6 @@ class Chatbot {
         this.sendBtn = document.getElementById('send-btn');
         this.quickReplies = document.querySelectorAll('.quick-reply-btn');
 
-        // Check for API Key
-        if (!this.apiKey) {
-            this.promptApiKey();
-        } else {
-            this.api = new GeminiAPI(this.apiKey);
-        }
-
         // Add Listeners
         this.addEventListeners();
 
@@ -91,19 +83,6 @@ class Chatbot {
         }
     }
 
-    promptApiKey() {
-        // Simple prompt for now, can be improved
-        setTimeout(() => {
-            const key = prompt("Please enter your Google Gemini API Key to enable the chatbot:");
-            if (key) {
-                this.apiKey = key;
-                localStorage.setItem('GEMINI_API_KEY', key);
-                this.api = new GeminiAPI(this.apiKey);
-                alert("API Key saved! Reloading...");
-                location.reload();
-            }
-        }, 1000);
-    }
 
     addEventListeners() {
         this.fab.addEventListener('click', () => this.toggleChat());
