@@ -31,12 +31,31 @@ app.use((req, res, next) => {
 
 // Health check endpoint
 app.get('/health', (req, res) => {
-    res.json({ status: 'ok', message: 'Server is running' });
+    res.json({ status: 'ok', message: 'Server is running', timestamp: new Date().toISOString() });
+});
+
+// Server test endpoint
+app.get('/server-test', (req, res) => {
+    res.send('<h1>Server is alive and responding!</h1>');
+});
+
+// Debug environment endpoint (Safe check)
+app.get('/debug-env', (req, res) => {
+    res.json({
+        has_key: !!process.env.GEMINI_API_KEY,
+        key_exists: "GEMINI_API_KEY" in process.env,
+        node_env: process.env.NODE_ENV || 'not set',
+        port: PORT
+    });
 });
 
 // Proxy endpoint for Gemini API
 app.post('/api/chat', async (req, res) => {
-    console.log("Chat request received:", JSON.stringify(req.body).substring(0, 100));
+    console.log("Chat request received:", JSON.stringify(req.body || {}).substring(0, 100));
+
+    if (!req.body || Object.keys(req.body).length === 0) {
+        return res.status(400).json({ error: "Empty request body" });
+    }
     try {
         const { history, userMessage, systemPrompt } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
