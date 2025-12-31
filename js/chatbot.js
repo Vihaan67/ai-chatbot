@@ -53,6 +53,7 @@ class Chatbot {
         this.history = JSON.parse(localStorage.getItem('chatHistory')) || [];
         this.isOpen = false;
         this.api = new GeminiAPI();
+        this.messageTimestamps = []; // For rate limiting
 
         this.init();
     }
@@ -188,6 +189,23 @@ class Chatbot {
     }
 
     async handleUserMessage(text) {
+        // Rate Limiting Check
+        const now = Date.now();
+        const ONE_MINUTE = 60 * 1000;
+        const LIMIT = 60;
+
+        // Remove timestamps older than 1 minute
+        this.messageTimestamps = this.messageTimestamps.filter(ts => now - ts < ONE_MINUTE);
+
+        if (this.messageTimestamps.length >= LIMIT) {
+            // Silently ignore or just don't send if limit is hit, 
+            // but let's keep a very high limit so real users aren't hit.
+            return;
+        }
+
+        // Add current timestamp
+        this.messageTimestamps.push(now);
+
         this.addMessage('user', text);
 
         if (!this.api) {

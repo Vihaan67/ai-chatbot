@@ -41,7 +41,20 @@ class GeminiAPI {
             });
 
             if (!response.ok) {
-                throw new Error(`API Error: ${response.statusText}`);
+                const errorData = await response.json().catch(() => ({}));
+                console.error("Server Error Response:", errorData);
+
+                if (response.status === 500) {
+                    return "⚙️ Server configuration issue: The API Key might be missing or incorrect. Please check your .env file.";
+                }
+                if (response.status === 429) {
+                    return "🚀 I'm a bit overwhelmed with requests right now! Please wait a minute and try asking again.";
+                }
+                if (response.status === 502) {
+                    return "🛰️ I'm having trouble connecting to my AI brain (Gemini API). It might be temporarily down.";
+                }
+
+                throw new Error(`API Error: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
@@ -49,7 +62,7 @@ class GeminiAPI {
             if (data.candidates && data.candidates.length > 0 && data.candidates[0].content) {
                 return data.candidates[0].content.parts[0].text;
             } else {
-                return "Hmm, I couldn't think of a response. Try asking again!";
+                return "🤔 I received an empty response. Could you try rephrasing your question?";
             }
 
         } catch (error) {
@@ -57,12 +70,11 @@ class GeminiAPI {
 
             // Check if it's likely a connection error (server offline)
             if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-                console.error("Network or connection error - is the server running?");
-                return "🚨 I can't connect to my server! Please make sure you've run 'npm start' in your terminal and you are opening http://localhost:3000.";
+                return "🚨 Network Error: I can't reach the server. Please check your internet connection and ensure the server is running on http://localhost:3000.";
             }
 
             console.error("Specific error caught:", error.message);
-            return "Oops! My brain is clouding over. Please check your internet or API key.";
+            return "🌪️ Something went wrong on my end. Please try refreshing the page or checking your internet connection. If you're the developer, check the terminal logs for more details.";
         }
     }
 }
