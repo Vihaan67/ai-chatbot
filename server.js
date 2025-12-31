@@ -36,6 +36,7 @@ app.get('/health', (req, res) => {
 
 // Proxy endpoint for Gemini API
 app.post('/api/chat', async (req, res) => {
+    console.log("Chat request received:", JSON.stringify(req.body).substring(0, 100));
     try {
         const { history, userMessage, systemPrompt } = req.body;
         const apiKey = process.env.GEMINI_API_KEY;
