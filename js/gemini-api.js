@@ -57,9 +57,11 @@ class GeminiAPI {
 
             // Check if it's likely a connection error (server offline)
             if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
+                console.error("Network or connection error - is the server running?");
                 return "🚨 I can't connect to my server! Please make sure you've run 'npm start' in your terminal and you are opening http://localhost:3000.";
             }
 
+            console.error("Specific error caught:", error.message);
             return "Oops! My brain is clouding over. Please check your internet or API key.";
         }
     }

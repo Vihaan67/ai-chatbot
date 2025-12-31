@@ -72,18 +72,27 @@ app.post('/api/chat', async (req, res) => {
             })
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Gemini API Error:", JSON.stringify(errorData));
-            return res.status(response.status).json({ error: "Gemini API failed", details: errorData });
+        const contentType = response.headers.get("content-type");
+        let data;
+
+        if (contentType && contentType.includes("application/json")) {
+            data = await response.json();
+        } else {
+            const text = await response.text();
+            console.error("Non-JSON response received from Gemini:", text.substring(0, 500));
+            return res.status(502).json({ error: "Invalid response from Gemini API", details: text.substring(0, 100) });
         }
 
-        const data = await response.json();
+        if (!response.ok) {
+            console.error("Gemini API Error:", JSON.stringify(data));
+            return res.status(response.status).json({ error: "Gemini API failed", details: data });
+        }
+
         res.json(data);
 
     } catch (error) {
         console.error("Server Error:", error);
-        res.status(500).json({ error: "Internal Server Error" });
+        res.status(500).json({ error: "Internal Server Error", message: error.message });
     }
 });
 
