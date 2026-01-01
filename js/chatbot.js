@@ -192,14 +192,13 @@ class Chatbot {
         // Rate Limiting Check
         const now = Date.now();
         const ONE_MINUTE = 60 * 1000;
-        const LIMIT = 60;
+        const LIMIT = 100;
 
         // Remove timestamps older than 1 minute
         this.messageTimestamps = this.messageTimestamps.filter(ts => now - ts < ONE_MINUTE);
 
         if (this.messageTimestamps.length >= LIMIT) {
-            // Silently ignore or just don't send if limit is hit, 
-            // but let's keep a very high limit so real users aren't hit.
+            // Very high limit to prevent accidental blocks
             return;
         }
 

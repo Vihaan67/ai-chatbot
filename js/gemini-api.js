@@ -70,11 +70,11 @@ class GeminiAPI {
 
             // Check if it's likely a connection error (server offline)
             if (error.message === 'Failed to fetch' || error.name === 'TypeError') {
-                return "🚨 Network Error: I can't reach the server. Please check your internet connection and ensure the server is running on http://localhost:3000.";
+                return "🚨 Network Error: I'm having trouble connecting to my brain! Please check your internet connection and try refreshing the page.";
             }
 
             console.error("Specific error caught:", error.message);
-            return "🌪️ Something went wrong on my end. Please try refreshing the page or checking your internet connection. If you're the developer, check the terminal logs for more details.";
+            return "🌪️ Something went wrong on my end. Please try refreshing the page or checking your internet connection. If the issue persists, the AI might be busy, so please try again in a moment!";
         }
     }
 }
