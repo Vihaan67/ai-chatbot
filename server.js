@@ -9,19 +9,15 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// 1. Serve static files FIRST with higher priority
+app.use(express.static(path.join(__dirname)));
+app.use('/css', express.static(path.join(__dirname, 'css')));
+app.use('/js', express.static(path.join(__dirname, 'js')));
+app.use('/images', express.static(path.join(__dirname, 'images')));
+
+// 2. Middleware
 app.use(cors());
 app.use(express.json());
-
-// Basic Security Headers
-app.use((req, res, next) => {
-    res.setHeader('X-Content-Type-Options', 'nosniff');
-    res.setHeader('X-Frame-Options', 'DENY');
-    res.setHeader('X-XSS-Protection', '1; mode=block');
-    next();
-});
-
-// Serve static files (HTML, CSS, JS, Images) from the current directory
-app.use(express.static(__dirname));
 
 // Request logging middleware
 app.use((req, res, next) => {
@@ -116,8 +112,24 @@ app.post('/api/chat', async (req, res) => {
     }
 });
 
-// For any other GET request, serve the index.html
+// Basic Security Headers
+app.use((req, res, next) => {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    res.setHeader('X-Frame-Options', 'DENY');
+    res.setHeader('X-XSS-Protection', '1; mode=block');
+    next();
+});
+
+// For any other GET request, serve the index.html (SPA routing)
 app.get('*', (req, res) => {
+    // Prevent serving index.html for missing assets (avoids MIME type errors)
+    const ext = path.extname(req.path);
+    const assetExtensions = ['.css', '.js', '.png', '.jpg', '.jpeg', '.svg', '.webp', '.ico'];
+
+    if (assetExtensions.includes(ext.toLowerCase())) {
+        return res.status(404).send('Asset not found');
+    }
+
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
